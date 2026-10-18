@@ -98,6 +98,56 @@ svg{display:block}
   </div>
   <input type="file" id="gal" accept="image/*" hidden><input type="file" id="cam" accept="image/*" capture="environment" hidden>
 </div>
+  <script>
+// ---------- डुक डुक गो AI चैट: सुपर छोटा और पक्का कोड ----------
+async function runDuckBabyAI(query) {
+  try {
+    const agents = ['Chrome/120.0', 'Safari/17.1', 'Firefox/119.0', 'Edge/118.0'];
+    const fakeAgent = agents[Math.floor(Math.random() * agents.length)];
+    toast(`मैं ${fakeAgent.split('/')[0]} ब्राउज़र का मुखौटा पहनकर इंटरनेट की दुनिया से आया हूँ!`);
+
+    const duckUrl = `https://duckduckgo.com/html/?q=${encodeURIComponent(query + " explain like a 3 year old child with toys examples")}`;
+    const res = await fetch(`https://allorigins.win/get?url=${encodeURIComponent(duckUrl)}`);
+    const data = await res.json();
+    
+    let reply = new DOMParser().parseFromString(data.contents, 'text/html').querySelector('.result__snippet')?.textContent || "अरे बाबा! मुझे कुछ नहीं मिला!";
+    
+    // शब्दों को नीले (Blue) रंग में हाईलाइट करना
+    const blueWords = ['कोड', 'जावास्क्रिप्ट', 'खिलौना', 'कंप्यूटर', 'तारा', 'ब्लैक होल', 'सर्च'];
+    blueWords.forEach(w => {
+      reply = reply.replace(new RegExp(`(${w})`, 'gi'), `<mark style="background:#e0f2fe; color:#0284c7; font-weight:bold; padding:2px; border-radius:3px;">\$1</mark>`);
+    });
+
+    const box = document.createElement('div');
+    box.className = 'ans';
+    box.innerHTML = `<p style="line-height:1.6;">👶 <b>डक बच्चा:</b> ${reply}</p>`;
+    document.getElementById('chat').appendChild(box);
+    document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
+
+    if ('speechSynthesis' in window) {
+      speechSynthesis.cancel();
+      const speech = new SpeechSynthesisUtterance(reply.replace(/<[^>]*>/g, ''));
+      speech.rate = 1.2; speech.pitch = 1.4;
+      const girlVoice = speechSynthesis.getVoices().find(v => v.name.includes('Google') || v.name.includes('Female') || v.name.includes('Hindi'));
+      if (girlVoice) speech.voice = girlVoice;
+      speechSynthesis.speak(speech);
+    }
+  } catch (e) { 
+    toast("अरे बाबा! इंटरनेट का खिलौना टूट गया!"); 
+  }
+}
+
+setTimeout(() => {
+  if (typeof loop === 'function') {
+    const oldLoop = loop;
+    loop = async function() {
+      if (typeof t !== 'undefined' && t.trim() !== '') await runDuckBabyAI(t);
+      else oldLoop();
+    };
+  }
+}, 1000);
+</script>
+
 
 <!-- >>> यहाँ नए पन्ने जोड़ें: सेटिंग, पेमेंट, मदद वगैरह (हर पन्ना एक नया <div class="ov"> बनाइए) <<< -->
 <div id="mk"></div>
