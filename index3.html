@@ -141,6 +141,9 @@ setTimeout(() => {
   if (typeof loop === 'function') {
     const oldLoop = loop;
     loop = async function() {
+     document.getElementById('go').onclick = () => runDuckBabyAI(document.getElementById('q').value);
+
+      
       if (typeof t !== 'undefined' && t.trim() !== '') await runDuckBabyAI(t);
       else oldLoop();
     };
